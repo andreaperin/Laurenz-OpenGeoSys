@@ -2,3 +2,4 @@ model/ogs
 model/ogs/*
 initial_files
 Tests
+.DS_Store
