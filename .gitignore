@@ -1,5 +1,14 @@
+.DS_Store
+.venv
+.python-version
+
 model/ogs
 model/ogs/*
-initial_files
+
+imgs/*
 Tests
-.DS_Store
+model_inputs/MultiLayerModel
+model_inputs/OneLayer_faster
+model_inputs/OneLayerModel
+
+test_extractor.jl
