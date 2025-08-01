@@ -1,3 +1,6 @@
 #!/bin/zsh
 
-./model/ogs/build/bin/ogs Initial_files/OneLayerModel/Einschichtmodell.prj -o Tests/outputs/Einschichtmodell
+
+start=$(date +%s)
+
+OGS_LOG_LEVEL=error ./model/ogs/build/bin/ogs model_inputs/OneLayer_faster/OneLayer_T1e2.prj -o Tests/outputs/OneLayer_faster
