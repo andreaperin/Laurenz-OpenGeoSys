@@ -1,8 +1,8 @@
-using Pkg
+# using Pkg
 
-ENV["PYTHON"] = "/Users/andreaperin_macos/Documents/Code/5_OpenGeoSys/.venv/bin/python"
+# ENV["PYTHON"] = "/Users/andreaperin_macos/Documents/Code/5_OpenGeoSys/.venv/bin/python"
 
-Pkg.build("PyCall")
+# Pkg.build("PyCall")
 
 using PyCall
 using Statistics
