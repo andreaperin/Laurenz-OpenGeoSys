@@ -31,7 +31,11 @@ disp = Extractor(base -> begin
     y = 0.0
     Δz = [-1340.55, 1274.45]
     
-    return extract_all_extraction_temperatures(base, x, y, Δz)
+    out = extract_all_extraction_temperatures(base, x, y, Δz)
+    
+    times = [result[2] for result in out]
+    idx = findmin(abs.(times .- 25.0))[2] # Return temperature closest to 25 years
+    return out[idx][1] 
 end, :disp)
 
 ogs = Solver(ogs_cmd,
@@ -40,9 +44,9 @@ ogs = Solver(ogs_cmd,
 )
 
 ext = ExternalModel(
-    sourcedir, sourcefile, disp, ogs, workdir = workdir, extras = extrafiles, formats = numberformats,
+    sourcedir, sourcefile, disp, ogs, workdir = workdir, extras = extrafiles, formats = numberformats, cleanup = true,
 )
 
 mc = MonteCarlo(1)
 
-s_mc = sobolindices(ext, viscosity, :viscosity, mc)
+s_mc = sobolindices(ext, viscosity, :disp, mc)
