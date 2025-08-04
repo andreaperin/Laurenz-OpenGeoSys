@@ -4,32 +4,35 @@ using DelimitedFiles
 
 include("exctractor_function.jl")
 
+#Variables
 
 viscosity = RandomVariable(Uniform(1e-6, 1e-3), :viscosity)
 
 
+# External Model
 
-sourcedir = joinpath(pwd(), "model_inputs/OneLayer_faster/OneLayer_faster")
+if Sys.iswindows()
+    ogs_cmd = joinpath(pwd(), "model", "ogs", "ogs.exe")
+elseif Sys.isMacOS()
+    ogs_cmd = joinpath(pwd(), "model", "ogs", "build", "bin", "ogs")
+else
+    ogs_cmd = "ogs" # Assuming ogs is on PATH
+end
 
+sourcedir = joinpath(pwd(), "model_inputs", "OneLayer_faster")
 sourcefile = "OneLayer_T1e2.prj"
+extrafiles = ["OneLayer_3D_domain_ini.vtu", "OneLayer_3D_physical_group_inj.vtu", "OneLayer_3D_physical_group_Pump.vtu", "OneLayer_3D.gml"]
+workdir = joinpath(pwd(), "output", "OneLayer_faster")
 
 numberformats = Dict(:viscosity => ".8e")
-
-workdir = joinpath(pwd(), "output/OneLayer_faster")
 
 disp = Extractor(base -> begin
     x = 2000.0
     y = 0.0
-    Δz = [0.0, 100.0]
+    Δz = [-1340.55, 1274.45]
     
     return extract_all_extraction_temperatures(base, x, y, Δz)
 end, :disp)
-
-if Sys.iswindows()
-    ogs_cmd = "./OGS_bin/ogs.exe"
-else
-    ogs_cmd = "ogs"  # Update this path to your OGS installation
-end
 
 ogs = Solver(ogs_cmd,
     sourcefile;
@@ -37,7 +40,7 @@ ogs = Solver(ogs_cmd,
 )
 
 ext = ExternalModel(
-    sourcedir, sourcefile, disp, ogs, workdir = workdir, formats = numberformats,
+    sourcedir, sourcefile, disp, ogs, workdir = workdir, extras = extrafiles, formats = numberformats,
 )
 
 mc = MonteCarlo(1)
