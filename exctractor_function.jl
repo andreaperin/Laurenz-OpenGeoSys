@@ -3,7 +3,7 @@ using Pkg
 if Sys.islinux()
     ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
 elseif Sys.iswindows()
-    ENV["PYTHON"] = "C:/Users/username/anaconda3/python.exe"
+    ENV["PYTHON"] = "C:/Users/laure/AppData/Local/Programs/Python/Python313/python.exe"
 elseif Sys.isapple()
     ENV["PYTHON"] = "/Users/andreaperin_macos/Documents/Code/5_OpenGeoSys/.venv/bin/python"
 else
