@@ -8,7 +8,7 @@ model/ogs/*
 imgs/*
 Tests
 model_inputs/MultiLayerModel
-model_inputs/OneLayer_faster
-model_inputs/OneLayerModel
+model_inputs/OneLayer_Coarse
+model_inputs/OneLayer_Fine
 
 test_extractor.jl
