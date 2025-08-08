@@ -1,8 +1,16 @@
 using Pkg
 
-ENV["PYTHON"] = "/Users/andreaperin_macos/Documents/Code/5_OpenGeoSys/.venv/bin/python"
+if Sys.islinux()
+    ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
+elseif Sys.iswindows()
+    ENV["PYTHON"] = "C:/Users/username/anaconda3/python.exe"
+elseif Sys.isapple()
+    ENV["PYTHON"] = "/Users/andreaperin_macos/Documents/Code/5_OpenGeoSys/.venv/bin/python"
+else
+    # ENV["PYTHON"] = "" # Default: try system Python or let PyCall auto-detect
+end
 
-Pkg.build("PyCall")
+# Pkg.build("PyCall")
 
 using PyCall
 using Statistics

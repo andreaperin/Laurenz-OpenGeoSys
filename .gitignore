@@ -5,6 +5,8 @@
 model/ogs
 model/ogs/*
 
+output/*
+
 imgs/*
 Tests
 model_inputs/MultiLayerModel
