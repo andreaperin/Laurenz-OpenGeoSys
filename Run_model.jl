@@ -6,8 +6,8 @@ addprocs(2)
 const MAIN_DIR = pwd()
 const OGS_CMD = Sys.iswindows() ? joinpath(MAIN_DIR, "model", "ogs", "ogs.exe") : 
                Sys.isapple() ? joinpath(MAIN_DIR, "model", "ogs", "build", "bin", "ogs") : "ogs"
-const SOURCE_DIR = joinpath(MAIN_DIR, "model_inputs", "OneLayer_faster")
-const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_faster")
+const SOURCE_DIR = joinpath(MAIN_DIR, "model_inputs", "OneLayer_Coarse")
+const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_Coarse")
 
 # Send constants to all workers
 @everywhere const OGS_CMD = $OGS_CMD
