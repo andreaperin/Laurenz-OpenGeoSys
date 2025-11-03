@@ -1,18 +1,26 @@
 using Distributed
 
-addprocs(2)
+addprocs(8)
 
 # Global constants
 const MAIN_DIR = pwd()
 const OGS_CMD = Sys.iswindows() ? joinpath(MAIN_DIR, "model", "ogs", "ogs.exe") : 
-               Sys.isapple() ? joinpath(MAIN_DIR, "model", "ogs", "build", "bin", "ogs") : "ogs"
+               Sys.isapple() ? joinpath(MAIN_DIR, "model", "ogs", "build", "bin", "ogs") : "/home/lau/Seafile/Documents/MT/Masterthesis_Github_Projects/ogs/ogs/build/bin/ogs"
 const SOURCE_DIR = joinpath(MAIN_DIR, "model_inputs", "OneLayer_IRZ_Coarse_Refined_mesh")
 const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh")
 
-# Send constants to all workers
-@everywhere const OGS_CMD = $OGS_CMD
-@everywhere const SOURCE_DIR = $SOURCE_DIR
-@everywhere const WORK_DIR = $WORK_DIR
+# Send constants to all workers (only define if not already defined to avoid InvalidRedefofConst)
+@everywhere begin
+    if !isdefined(Main, :OGS_CMD)
+        const OGS_CMD = $OGS_CMD
+    end
+    if !isdefined(Main, :SOURCE_DIR)
+        const SOURCE_DIR = $SOURCE_DIR
+    end
+    if !isdefined(Main, :WORK_DIR)
+        const WORK_DIR = $WORK_DIR
+    end
+end
 
 @everywhere begin
 
@@ -37,7 +45,7 @@ const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh"
     kappa_sandstone_3 = RandomVariable(dist_kappa_sandstone_3, :kappa_sandstone_3)
     sandstone_porosity_parameter_3 = RandomVariable(dist_sandstone_porosity_parameter_3, :sandstone_porosity_parameter_3)
 
-    const USE_COPULA = true
+    const USE_COPULA = false
 
     inputs = [
         thermal_conductivity_sandstone_3,
@@ -73,7 +81,7 @@ const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh"
     extrafiles = ["OneLayer_3D_domain_ini.vtu", "OneLayer_3D_physical_group_Inj.vtu", "OneLayer_3D_physical_group_Pump.vtu", "OneLayer_3D.gml"]
     numberformats = Dict(:thermal_conductivity_sandstone_3 => ".2f", :specific_heat_capacity_sandstone_3 => ".1f", :density_sandstone_3 => ".0f", :sandstone_porosity_parameter_3 => ".3f", :kappa_sandstone_3 => ".2e")
 
-    function find_crossing_year(temps::AbstractVector{<:Real}, times::AbstractVector{<:Real}; threshold = 71.0 + 273.15)
+    function find_crossing_year(temps::AbstractVector{<:Real}, times::AbstractVector{<:Real}; threshold = 70.0 + 273.15)
         isempty(temps) && return NaN
         temps[1] <= threshold && return times[1]
         for i in 1:length(temps)-1
@@ -86,14 +94,28 @@ const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh"
         return NaN
     end
 
+    function find_crossing_year(pairs::AbstractVector; threshold = 70.0 + 273.15)
+        isempty(pairs) && return NaN
+        temps = Float64[]
+        times = Float64[]
+        for p in pairs
+            if !(isa(p, AbstractVector) || isa(p, Tuple))
+                throw(ArgumentError("each element must be a 2-element vector or tuple [temp, time]"))
+            end
+            length(p) < 2 && throw(ArgumentError("each element must have at least two entries: [temp, time]"))
+            push!(temps, float(p[1]))
+            push!(times, float(p[2]))
+        end
+        return find_crossing_year(temps, times; threshold = threshold)
+    end
+
     disp = Extractor(base -> begin
         x = 2000.0
         y = 0.0
         Δz = [-1340.55, 1274.45]
         
-        out = extract_all_extraction_temperatures(base, x, y, Δz)
-        th = 71.0 + 273.15
-        return find_crossing_year([r[1] for r in out], [r[2] for r in out]; threshold = th)
+        th = 70.0 + 273.15
+        return find_crossing_year(extract_all_extraction_temperatures(base, x, y, Δz); threshold = th)
     end, :disp)
 
     ogs = Solver(OGS_CMD,
@@ -102,23 +124,23 @@ const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh"
     )
 
     ext = ExternalModel(
-        SOURCE_DIR, sourcefile, disp, ogs, workdir = WORK_DIR, extras = extrafiles, formats = numberformats, cleanup = true,
+        SOURCE_DIR, sourcefile, disp, ogs, workdir = WORK_DIR, extras = extrafiles, formats = numberformats, cleanup = false,
     )
 
 end
 
 
-mc = MonteCarlo(2)
+# mc = MonteCarlo(2)
 
-# s_mc = sobolindices(ext, [thermal_conductivity_sandstone_3; specific_heat_capacity_sandstone_3; density_sandstone_3; sandstone_porosity_parameter_3; kappa_sandstone_3], :disp, mc)
+# # s_mc = sobolindices(ext, [thermal_conductivity_sandstone_3; specific_heat_capacity_sandstone_3; density_sandstone_3; sandstone_porosity_parameter_3; kappa_sandstone_3], :disp, mc)
 
-min_years = 25.0
+# min_years = 25.0
 
-mc_pf, mc_std, mc_samples = probability_of_failure(
-    ext, df -> min_years .- df.disp, inputs, mc
-)
+# mc_pf, mc_std, mc_samples = probability_of_failure(
+#     ext, df -> min_years .- df.disp, inputs, mc
+# )
 
 
 
-rmprocs(workers())
+# rmprocs(workers())
 
