@@ -1,7 +1,13 @@
 using Pkg
 
 if Sys.islinux()
-    ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
+    osrelease = "/etc/os-release"
+    data = read(osrelease, String)
+    if occursin("Solus", data)
+        ENV["PYTHON"] = "/home/perin/Documents/projects/work/code/thermoptiplan_new/.venv/bin/python"
+    elseif occursin("NixOS", data)
+        ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
+    end
 elseif Sys.iswindows()
     ENV["PYTHON"] = "C:/Users/laure/AppData/Local/Programs/Python/Python313/python.exe"
 elseif Sys.isapple()
@@ -10,7 +16,7 @@ else
     # ENV["PYTHON"] = "" # Default: try system Python or let PyCall auto-detect
 end
 
-# Pkg.build("PyCall")
+Pkg.build("PyCall")
 
 using PyCall
 using Statistics
