@@ -33,7 +33,7 @@ addprocs(5)
 
     const USE_COPULA = false
 
-    # External Model Settings 
+    # External Model Settings
     const cleanup = true
     const sourcefile = "OneLayer_IRZ_T1e2_konstVisk.prj"
     const extrafiles = ["OneLayer_3D_domain_ini.vtu", "OneLayer_3D_physical_group_Inj.vtu", "OneLayer_3D_physical_group_Pump.vtu", "OneLayer_3D.gml"]
@@ -145,6 +145,6 @@ mkpath(path_to_pce)
 res = [pce, samples, mse]
 
 name = Dates.format(now(), "yyyy_mm_dd_HH_MM") * "_sobolsampling" * string(SOBOL_SAMPLING) * "_" * string(training_size) * ".jld2"
-@save joinpath(path_to_sensitivity, name) res
+@save joinpath(path_to_pce, name) res
 
 rmprocs(workers())
