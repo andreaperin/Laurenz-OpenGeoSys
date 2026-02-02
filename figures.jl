@@ -53,7 +53,51 @@ function plot_sobols(df::DataFrame, title::LaTeXString; height::String="8cm", wi
     return pgf
 end
 
-title = L"Sobol's Indices - Crossing Year - 500 samples - Sandstone3"
+# title = L"Sobol's Indices - Crossing Year - 500 samples - Sandstone3"
+# plot_sobol = plot_sobols(s_mc, title, bar_width=0.12)
+# path2save = "/home/perin/Documents/academic/slides/thermoptiplan/2_second_presentation_INTERNAL/imgs"
+# PGFPlotsX.save(joinpath(path2save, "Sobols.pdf"), plot_sobol)
+
+
+s_mc = DataFrame(
+    Variables=Symbol[
+        :thermal_conductivity_sandstone_3,
+        :specific_heat_capacity_sandstone_3,
+        :density_sandstone_3,
+        :sandstone_porosity_parameter_3,
+        :kappa_sandstone_3
+    ],
+    FirstOrder=Float64[
+        0.00482,
+        0.86120,
+        0.10640,
+        0.00731,
+        0.000455
+    ],
+    FirstOrderStdError=Float64[
+        0.00358,
+        0.00361,
+        0.00374,
+        0.00369,
+        0.00363
+    ],
+    TotalEffect=Float64[
+        0.00501,
+        0.86590,
+        0.09580,
+        0.00871,
+        0.00102
+    ],
+    TotalEffectStdError=Float64[
+        0.00422,
+        0.00429,
+        0.00438,
+        0.00431,
+        0.00446
+    ]
+)
+
+title = L"Sobol's Indices - Crossing Year - 128 samples - Sandstone3"
 plot_sobol = plot_sobols(s_mc, title, bar_width=0.12)
-path2save = "/home/perin/Documents/academic/slides/thermoptiplan/2_second_presentation_INTERNAL/imgs"
-PGFPlotsX.save(joinpath(path2save, "Sobols.pdf"), plot_sobol)
+path2save = "/home/perin/Documents/academic/slides/thermoptiplan/3_third_presentation_INTERNAL"
+PGFPlotsX.save(joinpath(path2save, "Sobols_new.pdf"), plot_sobol)

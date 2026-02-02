@@ -2,13 +2,14 @@ using Distributed
 using JLD2
 using Dates
 
-addprocs(5)
+addprocs(8)
 
 @everywhere begin
 
     using UncertaintyQuantification, DelimitedFiles, LinearAlgebra
 
-    const training_size = 221
+    const training_size = 500
+
     const degree = 4
     const SOBOL_SAMPLING = true
 
@@ -51,14 +52,28 @@ addprocs(5)
     # viscosity = RandomVariable(Uniform(1e-6, 1e-3), :viscosity)
     dist_thermal_conductivity_sandstone_3 = Truncated(Normal(2.09, 0.25), 1.5675, 2.6125) # Approx 25% uncertainty window tapered towards the limits
     dist_specific_heat_capacity_sandstone_3 = Truncated(Normal(820, 80), 615, 1025) # Approx 25% uncertainty window tapered towards the limits
-    dist_density_sandstone_3 = Truncated(Normal(2690, 100), 2400, 2900) # Approx 10% uncertainty window tapered towards the limits
+    dist_density_sandstone_3 = Truncated(Normal(2690, 100), 2400, 2800) # Approx 10% uncertainty window tapered towards the limits
     dist_kappa_sandstone_3 = Truncated(Normal(2.39e-13, 2.39e-14), 1.912e-13, 2.868e-13) # Approx 20% uncertainty window tapered towards the limits
-    dist_sandstone_porosity_parameter_3 = Truncated(Normal(0.2, 0.01), 0.18, 0.22) # Approx 20% uncertainty window tapered towards the limits
+    ## LOG Permeability
+    μ_kappa_sandstone_3 = 2.39e-13
+    σ_kappa_sandstone_3 = 2.39e-14
+    lo_kappa_sandstone_3 = 1.912e-13
+    hi_kappa_sandstone_3 = 2.868e-13
+    m = mean(dist_kappa_sandstone_3)
+    v = var(dist_kappa_sandstone_3)
+    σ_log² = log(1 + v / m^2)
+    σ_log = sqrt(σ_log²)
+    μ_log = log(m) - 0.5 * σ_log²
+    dist_log_kappa_sandstone_3 = Truncated(LogNormal(μ_log, σ_log), 1.912e-13, 2.868e-13)
+
+    dist_sandstone_porosity_parameter_3 = Truncated(Normal(0.2, 0.05), 0.12, 0.30) # Approx 20% uncertainty window tapered towards the limits
     # Wrap as RandomVariable objects (used by UQ routines)
     thermal_conductivity_sandstone_3 = RandomVariable(dist_thermal_conductivity_sandstone_3, :thermal_conductivity_sandstone_3)
     specific_heat_capacity_sandstone_3 = RandomVariable(dist_specific_heat_capacity_sandstone_3, :specific_heat_capacity_sandstone_3)
     density_sandstone_3 = RandomVariable(dist_density_sandstone_3, :density_sandstone_3)
     kappa_sandstone_3 = RandomVariable(dist_kappa_sandstone_3, :kappa_sandstone_3)
+    log_kappa_sandstone_3 = RandomVariable(dist_log_kappa_sandstone_3, :log_kappa_sandstone_3)
+
     sandstone_porosity_parameter_3 = RandomVariable(dist_sandstone_porosity_parameter_3, :sandstone_porosity_parameter_3)
 
     inputs = [
@@ -67,6 +82,7 @@ addprocs(5)
         density_sandstone_3,
         sandstone_porosity_parameter_3,
         kappa_sandstone_3,
+        # log_kappa_sandstone_3,
     ]
 
     function find_crossing_year(temps::AbstractVector{<:Real}, times::AbstractVector{<:Real}; threshold=T_threshold)
@@ -110,6 +126,7 @@ addprocs(5)
         args="",
     )
 
+    # log_model = Model(df -> exp.(df.log_kappa_sandstone_3), :kappa_sandstone_3)
     ext = ExternalModel(
         SOURCE_DIR, sourcefile, crossing_year, ogs, workdir=WORK_DIR, extras=extrafiles, formats=numberformats, cleanup=cleanup,
     )
@@ -142,6 +159,7 @@ mkpath(path_to_pce)
 
 @show("start pce analysis with simulation: $(est)")
 @time pce, samples, mse = polynomialchaos(inputs, ext, Ψ, :crossing_year, est)
+# @time pce, samples, mse = polynomialchaos(inputs, [log_model, ext], Ψ, :crossing_year, est)
 res = [pce, samples, mse]
 
 name = Dates.format(now(), "yyyy_mm_dd_HH_MM") * "_sobolsampling" * string(SOBOL_SAMPLING) * "_" * string(training_size) * ".jld2"
