@@ -67,26 +67,26 @@ addprocs(5)
         kappa_sandstone_3,
     ]
 
-    # if USE_COPULA
-    #     rho = 0.8
-    #     k = length(inputs)
-    #     Σ = Matrix{Float64}(I, k, k)
-    #     Σ[4, 5] = rho
-    #     Σ[5, 4] = rho
+    if USE_COPULA
+        rho = 0.8
+        k = length(inputs)
+        Σ = Matrix{Float64}(I, k, k)
+        Σ[4, 5] = rho
+        Σ[5, 4] = rho
 
-    #     D = sqrt.(diag(Σ))
-    #     R = Σ ./ (D * D')
+        D = sqrt.(diag(Σ))
+        R = Σ ./ (D * D')
 
-    #     marginals = RandomVariable[
-    #         thermal_conductivity_sandstone_3,
-    #         specific_heat_capacity_sandstone_3,
-    #         density_sandstone_3,
-    #         sandstone_porosity_parameter_3,
-    #         kappa_sandstone_3,
-    #     ]
+        marginals = RandomVariable[
+            thermal_conductivity_sandstone_3,
+            specific_heat_capacity_sandstone_3,
+            density_sandstone_3,
+            sandstone_porosity_parameter_3,
+            kappa_sandstone_3,
+        ]
 
-    #     inputs = [JointDistribution(marginals, GaussianCopula(R))]
-    # end
+        inputs = [JointDistribution(marginals, GaussianCopula(R))]
+    end
 
 
     function find_crossing_year(temps::AbstractVector{<:Real}, times::AbstractVector{<:Real}; threshold=T_threshold)
