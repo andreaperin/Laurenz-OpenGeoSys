@@ -3,4 +3,5 @@
 
 start=$(date +%s)
 
-OGS_LOG_LEVEL=error /home/perin/Documents/projects/work/code/ogs/build/bin/ogs model_inputs/OneLayer_IRZ_Coarse_Refined_mesh_test/OneLayer_IRZ_T1e2_konstVisk.prj -o Tests/outputs/OneLayer_test
+ogs model_inputs/Model_ML_IRZ_test/MULTI_BW_line_IRZ.prj
+#ogs model_inputs/test/OneLayer_Coarse/OneLayer_T1e2.prj -o Tests/outputs/MultiLayer_test
