@@ -21,7 +21,7 @@
             <secondary_variables>
 				<secondary_variable internal_name="darcy_velocity" output_name="darcy_velocity"/>
 <!--				<secondary_variable internal_name="temperature_gradiant" output_name="TemperaturGradient"/>
-				<secondary_variable internal_name="heat_flux" output_name="Wï¿½rmefluss"/>-->
+				<secondary_variable internal_name="heat_flux" output_name="Wärmefluss"/>-->
             </secondary_variables>
 <!--			<numerical_stabilization>
 				<type>IsotropicDiffusion</type>
@@ -157,17 +157,17 @@
 						<property>
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
-							<value>{{{ :thermal_conductivity_sandstone_3 }}}</value>    <!--2.38-->
+							<value>2.38</value>
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
-							<value>{{{ :specific_heat_capacity_sandstone_3 }}}</value>				<!--820-->
+							<value>820</value>
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
-							<value>{{{ :density_sandstone_3 }}}</value>				<!--2690-->
+							<value>2690</value>
 						</property>
 						<property>
 							<name>storage</name>
@@ -311,39 +311,81 @@
                 </time_discretization>
 				<time_stepping>
 					<type>FixedTimeStepping</type>
-                    <t_initial>0.0</t_initial>
-                    <t_end>126144000</t_end>  <!-- 4 years in seconds -->
-                    <timesteps>
-                        <pair>
-                            <repeat>4</repeat>
-                            <delta_t>31536000</delta_t>   <!-- 1 year -->
-                        </pair>
-                        <pair>
-                            <repeat>4</repeat>
-                            <delta_t>31536000</delta_t>   <!-- 1 year -->
-                        </pair>
-                    </timesteps>
+					<t_initial>0.0</t_initial>
+					<t_end>1576800000</t_end>
+					<!--31536000 1Jahr-->
+					<timesteps>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>30</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>60</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>90</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>180</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>360</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>2220</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>83700</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>378790</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>757582</delta_t>
+						</pair>
+						<pair>
+							<repeat>30</repeat>
+							<delta_t>5256000</delta_t>
+						</pair>
+						<pair>
+							<repeat>100</repeat>
+							<delta_t>15768000</delta_t>
+						</pair>
+					</timesteps>
 				</time_stepping>
 			</process>
 		</processes>
-
-        <output>
-            <type>VTK</type>
-            <prefix>OneLayer_IRZ</prefix>
-            <timesteps>
-                <pair>
-                    <repeat>8</repeat>
-                    <each_steps>1</each_steps> <!-- Output every step -->
-                </pair>
-            </timesteps>
+		<output>
+			<type>VTK</type>
+			<prefix>OneLayer_T1e2</prefix>
+			<timesteps>
+				<pair>
+					<repeat>10</repeat>
+					<each_steps>30</each_steps>
+				</pair>
+				<pair>
+					<repeat>1</repeat>
+					<each_steps>1</each_steps>
+				</pair>
+			</timesteps>
             <variables>
                 <variable>T</variable>
                 <variable>pressure</variable>
-                <variable>darcy_velocity</variable>
+				<variable>darcy_velocity</variable>
+<!--				<variable>heat_flux</variable>
+				<variable>temperature_gradient</variable>-->				
             </variables>
             <suffix>_ts_{:timestep}_t_{:time}</suffix>
         </output>
-   </time_loop>
+    </time_loop>
     <parameters>
         <parameter>
             <name>T0</name>
@@ -408,7 +450,7 @@
 		<parameter>
 			<name>sandstone_porosity_parameter_3</name>
 			<type>Constant</type>
-			<value>{{{ :sandstone_porosity_parameter_3 }}}</value>  <!-- 0.2 -->
+			<value>0.2</value>
 		</parameter>
 		<parameter>
 			<name>sandstone_porosity_parameter_4</name>
@@ -429,19 +471,19 @@
 		<parameter>
 			<name>kappa_Sandstone_3</name>
 			<type>Constant</type>
-			<values>{{{ :kappa_sandstone_3 }}}</values>			<!--Permeabilitï¿½t von Sandstein 3   2.39e-13-->
+			<values>2.39e-13</values>			<!--Permeabilität von Sandstein 3-->
 		</parameter>
 	
 
 		<parameter>
 			<name>outflow</name>
 			<type>Constant</type>
-			<value>-0.0003782</value>			<!--Hier 0.025mï¿½/s  teilen durch Lï¿½nge-->
+			<value>-0.0003782</value>			<!--Hier 0.025m³/s  teilen durch Länge-->
 		</parameter>
 		<parameter>
 			<name>inflow</name>
 			<type>Constant</type>
-			<value>0.0003782</value>			<!--teilen durch Lï¿½nge-->
+			<value>0.0003782</value>			<!--teilen durch Länge-->
 		</parameter>
 				
     </parameters>
@@ -512,7 +554,7 @@
     </process_variables>
     <nonlinear_solvers>
         <nonlinear_solver>
-            <name>basic_picard</name>		<!--auch bei Timeloop einfï¿½gen-->
+            <name>basic_picard</name>		<!--auch bei Timeloop einfügen-->
             <type>Picard</type>
             <max_iter>300</max_iter>
             <linear_solver>general_linear_solver</linear_solver>
