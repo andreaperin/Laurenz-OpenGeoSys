@@ -8,26 +8,26 @@ addprocs(8)
 
     using UncertaintyQuantification, DelimitedFiles, LinearAlgebra
 
-    const training_size = 500
+    const training_size = 2
 
     const degree = 4
     const SOBOL_SAMPLING = true
 
     const MAIN_DIR = pwd()
     const OGS_CMD =
-        if Sys.iswindows()
-            joinpath(MAIN_DIR, "model", "ogs", "ogs.exe")
-        elseif Sys.isapple()
-            joinpath(MAIN_DIR, "model", "ogs", "build", "bin", "ogs")
-        elseif Sys.islinux()
-            osrelease = "/etc/os-release"
-            data = read(osrelease, String)
-            if occursin("Solus", data)
-                expanduser("/home/perin/Documents/projects/work/code/ogs/build/bin/ogs")
-            elseif occursin("NixOS", data)
-                "/home/lau/Seafile/Documents/MT/Masterthesis_Github_Projects/ogs/ogs/build/bin/ogs"
-            end
+    if Sys.iswindows()
+        joinpath(MAIN_DIR, "model", "ogs", "ogs.exe")
+    elseif Sys.isapple()
+        joinpath(MAIN_DIR, "model", "ogs", "build", "bin", "ogs")
+    elseif Sys.islinux()
+        osrelease = "/etc/os-release"
+        data = read(osrelease, String)
+        if occursin("Solus", data)
+            expanduser("/home/perin/Documents/projects/work/code/ogs/build/bin/ogs")
+        elseif occursin("NixOS", data)
+            "/home/lau/Seafile/Documents/MT/Masterthesis_Github_Projects/ogs/ogs/build/bin/ogs"
         end
+    end
     const WORK_DIR = joinpath(MAIN_DIR, "output", "OneLayer_IRZ_Coarse_Refined_mesh")
     const SOURCE_DIR = joinpath(MAIN_DIR, "model_inputs", "OneLayer_IRZ_Coarse_Refined_mesh")
     # const SOURCE_DIR = joinpath(MAIN_DIR, "model_inputs", "OneLayer_IRZ_Coarse_Refined_mesh_test")
@@ -36,8 +36,29 @@ addprocs(8)
 
     # External Model Settings
     const cleanup = true
-    const sourcefile = "OneLayer_IRZ_T1e2_konstVisk.prj"
-    const extrafiles = ["OneLayer_3D_domain_ini.vtu", "OneLayer_3D_physical_group_Inj.vtu", "OneLayer_3D_physical_group_Pump.vtu", "OneLayer_3D.gml"]
+    const sourcefile = "MULTI_BW_line_IRZ.prj"
+    const extrafiles = [
+                        "MULTI_BW_line_IRZ_domain_ini.vtu",
+                        "MULTI_BW_line_IRZ_domain.vtu",
+                        "MULTI_BW_line_IRZ.geo",
+                        "MULTI_BW_line_IRZ.msh",
+                        "MULTI_BW_line_IRZ_physical_group_boundary_ini.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_boundary.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Clay_1.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Clay_2.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Inj_line_2.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Inj_line_3.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Inj_line_4.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Pump_line_2.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Pump_line_3.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Pump_line_4.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Sand_2.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Sand_3.vtu",
+                        "MULTI_BW_line_IRZ_physical_group_Sand_4.vtu",
+                        "MULTI_BW_line_IRZ.pvd",
+                        "MULTI_BW_line_IRZ_physical_group_Sand_2.vtu"
+                       ]
+
     const numberformats = Dict(:thermal_conductivity_sandstone_3 => ".2f", :specific_heat_capacity_sandstone_3 => ".1f", :density_sandstone_3 => ".0f", :sandstone_porosity_parameter_3 => ".3f", :kappa_sandstone_3 => ".2e")
     const x_extractor = 2_000.0
     const y_extractor = 0.0
@@ -77,13 +98,13 @@ addprocs(8)
     sandstone_porosity_parameter_3 = RandomVariable(dist_sandstone_porosity_parameter_3, :sandstone_porosity_parameter_3)
 
     inputs = [
-        thermal_conductivity_sandstone_3,
-        specific_heat_capacity_sandstone_3,
-        density_sandstone_3,
-        sandstone_porosity_parameter_3,
-        kappa_sandstone_3,
-        # log_kappa_sandstone_3,
-    ]
+              thermal_conductivity_sandstone_3,
+              specific_heat_capacity_sandstone_3,
+              density_sandstone_3,
+              sandstone_porosity_parameter_3,
+              kappa_sandstone_3,
+              # log_kappa_sandstone_3,
+             ]
 
     function find_crossing_year(temps::AbstractVector{<:Real}, times::AbstractVector{<:Real}; threshold=T_threshold)
         isempty(temps) && return NaN
@@ -114,22 +135,22 @@ addprocs(8)
     end
 
     crossing_year = Extractor(base -> begin
-            x = x_extractor
-            y = y_extractor
-            Δz = Δz_extractor
+                                  x = x_extractor
+                                  y = y_extractor
+                                  Δz = Δz_extractor
 
-            return find_crossing_year(extract_all_extraction_temperatures(base, x, y, Δz); threshold=T_threshold)
-        end, :crossing_year)
+                                  return find_crossing_year(extract_all_extraction_temperatures(base, x, y, Δz); threshold=T_threshold)
+                              end, :crossing_year)
 
     ogs = Solver(OGS_CMD,
-        sourcefile;
-        args="",
-    )
+                 sourcefile;
+                 args="",
+                )
 
     # log_model = Model(df -> exp.(df.log_kappa_sandstone_3), :kappa_sandstone_3)
     ext = ExternalModel(
-        SOURCE_DIR, sourcefile, crossing_year, ogs, workdir=WORK_DIR, extras=extrafiles, formats=numberformats, cleanup=cleanup,
-    )
+                        SOURCE_DIR, sourcefile, crossing_year, ogs, workdir=WORK_DIR, extras=extrafiles, formats=numberformats, cleanup=cleanup,
+                       )
 
     bases = repeat([LegendreBasis()], length(inputs))
     Ψ = PolynomialChaosBasis(bases, degree)
