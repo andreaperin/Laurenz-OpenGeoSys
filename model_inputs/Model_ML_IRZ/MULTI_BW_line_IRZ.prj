@@ -161,17 +161,20 @@
 						<property>
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
-							<value>2.38</value>
+							<value>{{{ :thermal_conductivity_sandstone2 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
-							<value>820</value>
+							<value>{{{ :specific_heat_capacity_sandstone2 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
-							<value>2690</value>
+							<value>{{{ :density_sandstone2 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -247,17 +250,20 @@
 						<property>
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
-							<value>2.38</value>
+							<value>{{{ :thermal_conductivity_sandstone3 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
-							<value>820</value>
+							<value>{{{ :specific_heat_capacity_sandstone3 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
-							<value>2690</value>
+							<value>{{{ :density_sandstone3 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -333,17 +339,20 @@
 						<property>
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
-							<value>2.38</value>
+							<value>{{{ :thermal_conductivity_sandstone4 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
-							<value>820</value>
+							<value>{{{ :specific_heat_capacity_sandstone4 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
-							<value>2690</value>
+							<value>{{{ :density_sandstone4 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -699,19 +708,16 @@
 			<value>0.036</value>
 		</parameter>
 		<parameter>
-			<name>sandstone_porosity_parameter_1</name>
-			<type>Constant</type>
-			<value>0.23</value>
-		</parameter>
-		<parameter>
 			<name>sandstone_porosity_parameter_2</name>
 			<type>Constant</type>
-			<value>0.19</value>
+			<value>{{{ :sandstone_porosity_parameter_2 }}}</value>
+			<!-- 0.19 -->
 		</parameter>
 		<parameter>
 			<name>sandstone_porosity_parameter_3</name>
 			<type>Constant</type>
-			<value>0.2</value>
+			<value>{{{ :sandstone_porosity_parameter_3 }}}</value>
+			<!-- 0.2 -->
 		</parameter>
 		<parameter>
 			<name>sandstone_porosity_parameter_4</name>
@@ -729,24 +735,21 @@
 			<values>9.72e-16</values>
 		</parameter>
 		<parameter>
-			<name>kappa_Sandstone_1</name>
-			<type>Constant</type>
-			<values>5.62e-13</values>			<!--Permeabilität von Sandstein 1-->
-		</parameter>
-		<parameter>
 			<name>kappa_Sandstone_2</name>
 			<type>Constant</type>
-			<values>1.56e-13</values>			<!--Permeabilität von Sandstein 2-->
+			<values>{{{ :kappa_Sandstone_2 }}}</values>			<!--Permeabilitï¿½t von Sandstein 2-->
+			<!-- 1.56e-13 -->
 		</parameter>
 		<parameter>
 			<name>kappa_Sandstone_3</name>
 			<type>Constant</type>
-			<values>2.39e-13</values>			<!--Permeabilität von Sandstein 3-->
+			<values>{{{ :kappa_Sandstone_3 }}}</values>			<!--Permeabilitï¿½t von Sandstein 3-->
+		<!-- 2.39e-13 -->
 		</parameter>
 		<parameter>
 			<name>kappa_Sandstone_4</name>
 			<type>Constant</type>
-			<values>4.97e-13</values>			<!--Permeabilität von Sandstein 4-->
+			<values>4.97e-13</values>			<!--Permeabilitï¿½t von Sandstein 4-->
 		</parameter>
 
 
@@ -869,7 +872,7 @@
     </process_variables>
     <nonlinear_solvers>
         <nonlinear_solver>
-            <name>basic_picard</name>		<!--auch bei Timeloop einfügen-->
+            <name>basic_picard</name>		<!--auch bei Timeloop einfï¿½gen-->
             <type>Picard</type>
             <max_iter>300</max_iter>
             <linear_solver>general_linear_solver</linear_solver>
