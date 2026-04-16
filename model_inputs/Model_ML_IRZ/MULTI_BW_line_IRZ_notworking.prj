@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <OpenGeoSysProject>
 	<meshes>
-
+		
 		<mesh>Multi_BW_line_IRZ_domain_ini.vtu</mesh>
 		<mesh>Multi_BW_line_IRZ_physical_group_Inj_line_2.vtu</mesh>
-		<mesh>Multi_BW_line_IRZ_physical_group_Inj_line_3.vtu</mesh>
+		<mesh>Multi_BW_line_IRZ_physical_group_Inj_line_3.vtu</mesh>	
 		<mesh>Multi_BW_line_IRZ_physical_group_Inj_line_4.vtu</mesh>
 		<mesh>Multi_BW_line_IRZ_physical_group_Pump_line_2.vtu</mesh>
 		<mesh>Multi_BW_line_IRZ_physical_group_Pump_line_3.vtu</mesh>
 		<mesh>Multi_BW_line_IRZ_physical_group_Pump_line_4.vtu</mesh>
 		<mesh>Multi_BW_line_IRZ_physical_group_boundary_ini.vtu</mesh>
-
+		
 	</meshes>
 
     <processes>
         <process>
             <name>thermohydraulic</name>
             <type>HT</type>                         <!--Hydrothermisch-->
-            <integration_order>2</integration_order>
+            <integration_order>2</integration_order> 
             <process_variables>
                 <temperature>T</temperature>
                 <pressure>pressure</pressure>
@@ -30,15 +30,15 @@
 				<type>IsotropicDiffusion</type>
 				<tuning_parameter>0.15</tuning_parameter>
 				<cutoff_velocity>10e-3</cutoff_velocity>
-			</numerical_stabilization>-->
+			</numerical_stabilization>-->	
 
-
+			
         </process>
     </processes>
-
+	
     <media>
    <!--Clay 1-->
-       <medium id="0,4">
+       <medium id="0,4">                 
             <phases>
                 <phase>
                     <type>AqueousLiquid</type>
@@ -88,9 +88,9 @@
                             <value>2300</value>
                         </property>
                         <property>
-                            <name>storage</name>
+                            <name>storage</name>			
                             <type>Constant</type>
-                            <value>0</value>
+                            <value>0</value>                
                         </property>
                     </properties>
                 </phase>
@@ -162,16 +162,19 @@
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
 							<value>{{{ :thermal_conductivity_sandstone1 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
 							<value>{{{ :specific_heat_capacity_sandstone1 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
 							<value>{{{ :density_sandstone1 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -248,16 +251,19 @@
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
 							<value>{{{ :thermal_conductivity_sandstone2 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
 							<value>{{{ :specific_heat_capacity_sandstone2 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
 							<value>{{{ :density_sandstone2 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -334,16 +340,19 @@
 							<name>thermal_conductivity</name>
 							<type>Constant</type>
 							<value>{{{ :thermal_conductivity_sandstone3 }}}</value>
+							<!-- 2.38 -->
 						</property>
 						<property>
 							<name>specific_heat_capacity</name>
 							<type>Constant</type>
 							<value>{{{ :specific_heat_capacity_sandstone3 }}}</value>
+							<!-- 820 -->
 						</property>
 						<property>
 							<name>density</name>
 							<type>Constant</type>
 							<value>{{{ :density_sandstone3 }}}</value>
+							<!-- 2690 -->
 						</property>
 						<property>
 							<name>storage</name>
@@ -380,10 +389,10 @@
 				</property>
 			</properties>
 		</medium>
-
+		
 		<!--clay 2-->
 	<!--		<medium id="4">
-
+				
 				<phases>
 					<phase>
 						<type>AqueousLiquid</type>
@@ -405,7 +414,7 @@
 							</property>
 							<property>
 								<name>viscosity</name>
-
+								
 								<type>Function</type>
 								<value>
 									<expression>4.89e-5 *exp(486.37/ ((temperature+273)-148.86))</expression>
@@ -433,7 +442,7 @@
 							</property>
 							<property>
 								<name>storage</name>
-
+								
 								<type>Constant</type>
 								<value>0</value>
 							</property>
@@ -468,12 +477,12 @@
 				</properties>
 			</medium>
 		-->
-
-
-
-
+		
+			
+		
+		
 	</media>
-
+		
     <time_loop>
         <processes>
             <process ref="thermohydraulic">
@@ -492,7 +501,7 @@
 					<t_initial>0.0</t_initial>
 					<t_end>2365200000</t_end>
 					<initial_dt>0.1</initial_dt>
-					<minimum_dt>0.001</minimum_dt>
+					<minimum_dt>0.01</minimum_dt>
 					<maximum_dt>15768000</maximum_dt>
 					<number_iterations>2 6 8 9</number_iterations>
 					<multiplier>1.6 1.0 0.5 0.25</multiplier>
@@ -645,14 +654,14 @@
 
 
 			</fixed_output_times>
-
-
+			
+			
             <variables>
                 <variable>T</variable>
                 <variable>pressure</variable>
 				<variable>darcy_velocity</variable>
 <!--				<variable>heat_flux</variable>
-				<variable>temperature_gradient</variable>-->
+				<variable>temperature_gradient</variable>-->				
             </variables>
             <suffix>_ts_{:timestep}_t_{:time}</suffix>
         </output>
@@ -661,7 +670,7 @@
 
 		<parameter>
 			<name>T0</name>
-			<type>MeshNode</type>
+			<type>MeshNode</type>			
 			<field_name>T_ini</field_name>
 		</parameter>
 		<parameter>
@@ -676,7 +685,7 @@
             <value>30</value>
         </parameter>
         <parameter>
-            <name>p_ini</name>
+            <name>p_ini</name>  
 		<!--	<type>Constant</type>
 			<value>140e5</value>-->
            	<type>MeshNode</type>
@@ -687,7 +696,7 @@
 			<type>MeshNode</type>
 			<mesh>Multi_BW_line_IRZ_physical_group_boundary_ini</mesh>
 			<field_name>pressure_ini</field_name>
-		</parameter>
+		</parameter>       
         <parameter>
             <name>clay_1_porosity_parameter</name>
             <type>Constant</type>
@@ -699,25 +708,23 @@
 			<value>0.036</value>
 		</parameter>
 		<parameter>
-			<name>sandstone_porosity_parameter_1</name>
-			<type>Constant</type>
-			<value>0.23</value>
-		</parameter>
-		<parameter>
 			<name>sandstone_porosity_parameter_2</name>
 			<type>Constant</type>
 			<value>{{{ :sandstone_porosity_parameter_2 }}}</value>
+			<!-- 0.19 -->
 		</parameter>
 		<parameter>
 			<name>sandstone_porosity_parameter_3</name>
 			<type>Constant</type>
 			<value>{{{ :sandstone_porosity_parameter_3 }}}</value>
+			<!-- 0.2 -->
 		</parameter>
 		<parameter>
 			<name>sandstone_porosity_parameter_4</name>
 			<type>Constant</type>
 			<value>{{{ :sandstone_porosity_parameter_4 }}}</value>
-		</parameter>
+			<!-- 0.22 -->
+		</parameter>		
 		<parameter>
 			<name>kappa_clay_1</name>
 			<type>Constant</type>
@@ -729,36 +736,34 @@
 			<values>9.72e-16</values>
 		</parameter>
 		<parameter>
-			<name>kappa_Sandstone_1</name>
-			<type>Constant</type>
-			<values>5.62e-13</values>			<!--Permeabilit�t von Sandstein 1-->
-		</parameter>
-		<parameter>
 			<name>kappa_Sandstone_2</name>
 			<type>Constant</type>
 			<values>{{{ :kappa_Sandstone_2 }}}</values>			<!--Permeabilit�t von Sandstein 2-->
+			<!-- 1.56e-13 -->
 		</parameter>
 		<parameter>
 			<name>kappa_Sandstone_3</name>
 			<type>Constant</type>
 			<values>{{{ :kappa_Sandstone_3 }}}</values>			<!--Permeabilit�t von Sandstein 3-->
+		<!-- 2.39e-13 -->
 		</parameter>
 		<parameter>
 			<name>kappa_Sandstone_4</name>
 			<type>Constant</type>
 			<values>{{{ :kappa_Sandstone_4 }}}</values>			<!--Permeabilit�t von Sandstein 4-->
+			<!-- 4.97e-13 -->
 		</parameter>
 
 
 		<parameter>
 			<name>Inj_2</name>
 			<type>Constant</type>
-			<value>2.43e-4</value>
+			<value>2.43e-4</value>		
 		</parameter>
 		<parameter>
 			<name>Pump_2</name>
 			<type>Constant</type>
-			<value>-2.43e-4</value>
+			<value>-2.43e-4</value>			
 		</parameter>
 		<parameter>
 			<name>Inj_3</name>
@@ -780,7 +785,7 @@
 			<type>Constant</type>
 			<value>-7.966e-4</value>
 		</parameter>
-
+				
     </parameters>
     <process_variables>
         <process_variable>
@@ -790,13 +795,13 @@
             <initial_condition>T0</initial_condition>
 
 			<boundary_conditions>
-
+		
 				<boundary_condition>
 					<mesh>Multi_BW_line_IRZ_physical_group_boundary_ini</mesh>
 					<type>Dirichlet</type>
 					<parameter>T_boundary</parameter>
 				</boundary_condition>
-
+				
 				<boundary_condition>
 					<mesh>Multi_BW_line_IRZ_physical_group_Inj_line_2</mesh>
 					<type>Dirichlet</type>
@@ -813,14 +818,14 @@
 					<parameter>T_inj</parameter>
 				</boundary_condition>
             </boundary_conditions>
-
+			
         </process_variable>
         <process_variable>
             <name>pressure</name>
             <components>1</components>
             <order>1</order>
             <initial_condition>p_ini</initial_condition>
-
+			
           <boundary_conditions>
 
 			  <boundary_condition>
@@ -828,9 +833,9 @@
 				  <type>Dirichlet</type>
 				  <parameter>p_boundary</parameter>
 			  </boundary_condition>
-
+			  
 			</boundary_conditions>
-
+			
 
 			<source_terms>
 				<source_term>
@@ -863,8 +868,8 @@
 					<type>Line</type>
 					<parameter>Pump_4</parameter>
 				</source_term>
-			</source_terms>
-
+			</source_terms> 
+			
         </process_variable>
     </process_variables>
     <nonlinear_solvers>
@@ -887,7 +892,7 @@
                 <precon_type>ILUT</precon_type>
                 <solver_type>BiCGSTAB</solver_type>
                 <max_iteration_step>5000</max_iteration_step>
-                <error_tolerance>1e-8</error_tolerance>
+                <error_tolerance>1e-12</error_tolerance>
             </eigen>
             <!--petsc>
                 <prefix>gw</prefix>
