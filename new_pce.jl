@@ -1,11 +1,16 @@
 using Distributed
 using Dates
 
+addprocs(2)
+
 @everywhere begin
 
     using UncertaintyQuantification
     using JLD2
     include("new_extractor.jl")
+
+    const TRAIN_SAMPLES = 2
+    const PCE_DEGREE = 4
 
     const OGS_CMD = "ogs"
     const WORK_DIR = joinpath(pwd(), "output", "Model_ML_IRZ")
@@ -71,6 +76,9 @@ using Dates
     density_sandstone2 = RandomVariable(dist_density_sandstone, :density_sandstone2)
     density_sandstone3 = RandomVariable(dist_density_sandstone, :density_sandstone3)
 
+    porosity_parameter1 = RandomVariable(dist_porosity_parameter_sandstone1, :sandstone_porosity_parameter_2)
+    porosity_parameter2 = RandomVariable(dist_porosity_parameter_sandstone2, :sandstone_porosity_parameter_3)
+    porosity_parameter3 = RandomVariable(dist_porosity_parameter_sandstone3, :sandstone_porosity_parameter_4)
 
     kappa_sandstone1 = RandomVariable(dist_kappa_sandstone1, :kappa_Sandstone_2)
     kappa_sandstone2 = RandomVariable(dist_kappa_sandstone2, :kappa_Sandstone_3)
@@ -132,9 +140,6 @@ using Dates
     crossing_year_model = Model(df -> crossing_year.(df.final_T), :crossing_year)
 
     models = [ext, flow_model, final_T_model, crossing_year_model]
-
-    const TRAIN_SAMPLES = 29
-    const PCE_DEGREE = 4
 
     println("Preparing PCE with TRAIN_SAMPLES=$TRAIN_SAMPLES, degree=$PCE_DEGREE")
 
