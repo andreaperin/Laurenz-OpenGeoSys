@@ -7,6 +7,8 @@ if Sys.islinux()
         ENV["PYTHON"] = "/home/perin/Documents/projects/work/code/thermoptiplan_new/.venv/bin/python"
     elseif occursin("NixOS", data)
         ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
+    elseif occursin("Ubuntu", data)
+        ENV["PYTHON"] = "/home/andrea.perin/ThermoOptiPlan/.venv/bin/python"
     end
 end
 
@@ -62,3 +64,27 @@ function extraction_temperatures_over_time(output_path::String, x::Float64, y::F
 
     return sort(results, by=x -> x[end])
 end
+
+
+# x = 2_250.0
+# y = 0.0
+# Δz_bottom = (-1374.8, -1364.6)
+# Δz_middle = (-1338.0, -1309.1)
+# Δz_top = (-1265.4, -1240.2)
+# Δz = [
+#     Δz_bottom,
+#     Δz_middle,
+#     Δz_top
+# ]
+
+# output_path = "/home/perin/Documents/projects/work/code/thermoptiplan_new/output/Model_ML_IRZ/2026-04-09-17-57-13/sample-1"
+
+# extraction_temperatures = Vector{Vector{Any}}()
+# push!(extraction_temperatures, extraction_temperatures_over_time(output_path, x, y, Δz))
+
+# flows = Vector{Vector{Real}}([[0.3, 0.3, 0.4]])
+
+
+# function final_temperature(extraction_temperatures::Vector{Vector{<:Real}}, flows::Vector{<:Real})
+#     return [[sum(v[1:3] .* flows), v[4]] for v in extraction_temperatures]
+# end
