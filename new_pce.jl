@@ -1,6 +1,5 @@
 using Distributed
 using Dates
-addprocs(2)
 
 @everywhere begin
 
@@ -72,9 +71,6 @@ addprocs(2)
     density_sandstone2 = RandomVariable(dist_density_sandstone, :density_sandstone2)
     density_sandstone3 = RandomVariable(dist_density_sandstone, :density_sandstone3)
 
-    porosity_parameter1 = RandomVariable(dist_porosity_parameter_sandstone1, :sandstone_porosity_parameter_2)
-    porosity_parameter2 = RandomVariable(dist_porosity_parameter_sandstone2, :sandstone_porosity_parameter_3)
-    porosity_parameter3 = RandomVariable(dist_porosity_parameter_sandstone3, :sandstone_porosity_parameter_4)
 
     kappa_sandstone1 = RandomVariable(dist_kappa_sandstone1, :kappa_Sandstone_2)
     kappa_sandstone2 = RandomVariable(dist_kappa_sandstone2, :kappa_Sandstone_3)
@@ -137,7 +133,7 @@ addprocs(2)
 
     models = [ext, flow_model, final_T_model, crossing_year_model]
 
-    const TRAIN_SAMPLES = 2
+    const TRAIN_SAMPLES = 29
     const PCE_DEGREE = 4
 
     println("Preparing PCE with TRAIN_SAMPLES=$TRAIN_SAMPLES, degree=$PCE_DEGREE")
@@ -165,6 +161,9 @@ addprocs(2)
     println("Running polynomial chaos construction (this may run external model per sample)...")
 
 end
+
+path_to_pce = joinpath(pwd(), "results", "pce")
+mkpath(path_to_pce)
 
 path_to_pce = joinpath(pwd(), "results", "pce")
 mkpath(path_to_pce)
