@@ -1,15 +1,13 @@
 using Distributed
 using Dates
 
-addprocs(2)
-
 @everywhere begin
 
     using UncertaintyQuantification
     using JLD2
     include("new_extractor.jl")
 
-    const TRAIN_SAMPLES = 2
+    const TRAIN_SAMPLES = 128
     const PCE_DEGREE = 4
 
     const OGS_CMD = "ogs"
@@ -156,15 +154,12 @@ addprocs(2)
         end
     end
 
-    bases = [choose_basis(rv) for rv in inputs]
+    bases = choose_basis.(inputs)
     Ψ = PolynomialChaosBasis(bases, PCE_DEGREE)
 
     est = LeastSquares(SobolSampling(TRAIN_SAMPLES))
 
     println("Running polynomial chaos construction (this may run external model per sample)...")
-
-    println("Running polynomial chaos construction (this may run external model per sample)...")
-
 end
 
 path_to_pce = joinpath(pwd(), "results", "pce")
