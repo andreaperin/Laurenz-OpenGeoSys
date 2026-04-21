@@ -11,7 +11,7 @@ using Dates
     const PCE_DEGREE = 4
 
     const OGS_CMD = "ogs"
-    const WORK_DIR = joinpath(pwd(), "output", "Model_ML_IRZ")
+    const WORK_DIR = "/work/andrea.perin/ThermoOptiPlan/output/Model_ML_IRZ_3layers"
     const SOURCE_DIR = joinpath(pwd(), "model_inputs", "Model_ML_IRZ")
     const cleanup = false
 
@@ -162,10 +162,7 @@ using Dates
     println("Running polynomial chaos construction (this may run external model per sample)...")
 end
 
-path_to_pce = joinpath(pwd(), "results", "pce")
-mkpath(path_to_pce)
-
-path_to_pce = joinpath(pwd(), "results", "pce")
+path_to_pce = joinpath("/work/andrea.perin/ThermoOptiPlan/results/pce")
 mkpath(path_to_pce)
 
 @show("start pce analysis with simulation: $(est)")
