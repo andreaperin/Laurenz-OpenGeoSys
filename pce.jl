@@ -5,7 +5,7 @@ using Dates
 
     using UncertaintyQuantification
     using JLD2
-    include("new_extractor.jl")
+    include("extractor.jl")
 
     const TRAIN_SAMPLES = 128
     const PCE_DEGREE = 4
