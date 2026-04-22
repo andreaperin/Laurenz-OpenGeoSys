@@ -2,9 +2,9 @@
 #SBATCH --account=andrea.perin
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=30
-#SBATCH --output=pce_fullmodel_stdoutput.txt
-#SBATCH --error=pce_fullmodel_stderror.txt
+#SBATCH --cpus-per-task=29
+#SBATCH --mail-user=andrea.perin@irz.uni-hannover.de
+#SBATCH --mail-type=ALL
 
 module load OpenGeoSys
 
