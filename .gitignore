@@ -6,6 +6,7 @@ model/ogs
 model/ogs/*
 
 output/*
+results/*
 
 imgs/*
 Tests
