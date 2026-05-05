@@ -4,7 +4,7 @@ using JLD2
 
 include("extractor.jl")
 
-const TRAIN_SAMPLES = 256
+const TRAIN_SAMPLES = 32
 const PCE_DEGREE = 4
 
 const OGS_CMD = "ogs"
@@ -189,5 +189,3 @@ res = [pce, samples, mse]
 
 name = Dates.format(now(), "yyyy_mm_dd_HH_MM") * "_3layers" * "_sobolsampling" * "_" * string(TRAIN_SAMPLES) * "_deg" * "_" * string(PCE_DEGREE) * ".jld2"
 @save joinpath(path_to_pce, name) res
-
-rmprocs(workers())
