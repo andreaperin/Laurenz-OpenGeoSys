@@ -4,7 +4,7 @@ if Sys.islinux()
     osrelease = "/etc/os-release"
     data = read(osrelease, String)
     if occursin("Solus", data)
-        ENV["PYTHON"] = "/home/perin/Documents/projects/work/code/thermoptiplan_new/.venv/bin/python"
+        ENV["PYTHON"] = "/home/perin/Projects/ThermoOptiPlan/.venv/bin/python"
     elseif occursin("NixOS", data)
         ENV["PYTHON"] = "/home/lau/python_venv/bin/python"
     elseif occursin("Ubuntu", data)
